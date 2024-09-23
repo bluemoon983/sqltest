@@ -64,4 +64,19 @@ class DatabaseService {
       meaning: data[0]['meaning'],
     );
   }
+
+  Future<bool> updateWord(Word word) async {
+    final Database db = await database;
+    try {
+      await db.update(
+        'words',
+        word.toMap(),
+        where: "id = ?",
+        whereArgs: [word.id],
+      );
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
 }
