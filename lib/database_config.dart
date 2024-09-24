@@ -79,4 +79,18 @@ class DatabaseService {
       return false;
     }
   }
+
+  Future<bool> deleteWord(int id) async {
+    final Database db = await database;
+    try {
+      db.delete(
+        'word',
+        where: "id = ?",
+        whereArgs: [id],
+      );
+      return true;
+    } catch (err) {
+      return false;s
+    }
+  }
 }
