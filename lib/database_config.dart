@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqltest/word.dart';
 
 class DatabaseService {
-  static final DatabaseService _database = DatabaseService.interval();
+  static final DatabaseService _database = DatabaseService._internal();
   late Future<Database> database;
 
   factory DatabaseService() => _database;
@@ -14,12 +14,16 @@ class DatabaseService {
 
   Future<bool> databaseConfig() async {
     try {
-      database =
-          openDatabase(join(await getDatabasesPath(), 'word_database.db'),
-              onCreate: (db, version) {
-        return db.execute(
-            'CREATE TABLE words(id INTEGER PRIMARY KEY, name TEXT, meaning TEXT)');
-      }, version: 1);
+      database = openDatabase(
+        join(await getDatabasesPath(), 'word_database.db'),
+        onCreate: (db, version) {
+          return db.execute(
+            'CREATE TABLE words (id INTEGER PRIMARY KEY, name TEXT, meaning TEXT)',
+          );
+        },
+        version: 1,
+      );
+      return true;
     } catch (err) {
       print(err.toString());
       return false;
@@ -90,7 +94,7 @@ class DatabaseService {
       );
       return true;
     } catch (err) {
-      return false;s
+      return false;
     }
   }
 }
