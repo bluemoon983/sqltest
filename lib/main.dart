@@ -8,7 +8,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(title: 'Flutter App', home: HomePage());
@@ -27,15 +26,21 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _meaningController = TextEditingController();
   final DatabaseService _databaseService = DatabaseService();
 
-  Future<List<Word>> _wordList = DatabaseService()
-      .databaseConfig()
-      .then((_) => DatabaseService().selectWords());
+  late Future<List<Word>> _wordList; // Future<List<Word>>의 초기화는 나중에 진행
 
   int currentCount = 0;
 
   @override
   void initState() {
     super.initState();
+    _initializeDatabase(); // 데이터베이스 초기화 호출
+  }
+
+  Future<void> _initializeDatabase() async {
+    await _databaseService.databaseConfig();
+    setState(() {
+      _wordList = _databaseService.selectWords();
+    });
   }
 
   @override
@@ -52,8 +57,10 @@ class _HomePageState extends State<HomePage> {
             builder: (BuildContext context) => addWordDialog(),
           );
         },
+        backgroundColor: Colors.white,
         child: const Icon(
           Icons.add,
+          color: Colors.black,
         ),
       ),
       body: Container(
@@ -139,7 +146,10 @@ class _HomePageState extends State<HomePage> {
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all(Colors.green),
         ),
-        child: const Icon(Icons.edit));
+        child: const Icon(
+          Icons.edit,
+          color: Colors.white,
+        ));
   }
 
   Widget deleteButton(int id) {
@@ -152,7 +162,10 @@ class _HomePageState extends State<HomePage> {
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all(Colors.red),
         ),
-        child: const Icon(Icons.delete));
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+        ));
   }
 
   Widget addWordDialog() {
@@ -174,14 +187,31 @@ class _HomePageState extends State<HomePage> {
         children: [
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(hintText: "단어를 입력하세요.,"),
+            decoration: const InputDecoration(
+              hintText: "단어를 입력하세요.",
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black), // 기본 밑줄 색상
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black), // 포커스된 상태의 밑줄 색상
+              ),
+            ),
+            cursorColor: Colors.black, // 커서 색상
           ),
           const SizedBox(height: 15),
           TextField(
             controller: _meaningController,
             decoration: const InputDecoration(
               hintText: "뜻을 입력하세요.",
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+              ),
             ),
+            cursorColor: Colors.black, // 커서 색상
+            style: const TextStyle(color: Colors.black),
           ),
           const SizedBox(height: 15),
           ElevatedButton(
@@ -205,7 +235,12 @@ class _HomePageState extends State<HomePage> {
                 },
               );
             },
-            child: const Text("생성"),
+            child: const Text(
+              "생성",
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
           ),
         ],
       ),
@@ -308,7 +343,6 @@ class _HomePageState extends State<HomePage> {
                     (result) {
                       if (result) {
                         Navigator.of(context).pop();
-
                         setState(() {
                           _wordList = _databaseService.selectWords();
                         });
@@ -318,11 +352,21 @@ class _HomePageState extends State<HomePage> {
                     },
                   );
                 },
-                child: const Text("예"),
+                child: const Text(
+                  "예",
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text("아니오"),
+                child: const Text(
+                  "아니오",
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
               ),
             ],
           ),
