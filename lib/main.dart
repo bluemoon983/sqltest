@@ -26,14 +26,14 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _meaningController = TextEditingController();
   final DatabaseService _databaseService = DatabaseService();
 
-  late Future<List<Word>> _wordList; // Future<List<Word>>의 초기화는 나중에 진행
+  late Future<List<Word>> _wordList;
 
   int currentCount = 0;
 
   @override
   void initState() {
     super.initState();
-    _initializeDatabase(); // 데이터베이스 초기화 호출
+    _initializeDatabase();
   }
 
   Future<void> _initializeDatabase() async {
@@ -168,6 +168,27 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
+  // 경고 대화상자 추가
+  void _showWarningDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('경고'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget addWordDialog() {
     return AlertDialog(
       title: Row(
@@ -190,13 +211,13 @@ class _HomePageState extends State<HomePage> {
             decoration: const InputDecoration(
               hintText: "단어를 입력하세요.",
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black), // 기본 밑줄 색상
+                borderSide: BorderSide(color: Colors.black),
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.black), // 포커스된 상태의 밑줄 색상
+                borderSide: BorderSide(color: Colors.black),
               ),
             ),
-            cursorColor: Colors.black, // 커서 색상
+            cursorColor: Colors.black,
           ),
           const SizedBox(height: 15),
           TextField(
@@ -210,12 +231,19 @@ class _HomePageState extends State<HomePage> {
                 borderSide: BorderSide(color: Colors.black),
               ),
             ),
-            cursorColor: Colors.black, // 커서 색상
+            cursorColor: Colors.black,
             style: const TextStyle(color: Colors.black),
           ),
           const SizedBox(height: 15),
           ElevatedButton(
             onPressed: () {
+              // 입력값 체크
+              if (_nameController.text.isEmpty ||
+                  _meaningController.text.isEmpty) {
+                _showWarningDialog('모든 필드를 입력해주세요.');
+                return;
+              }
+
               _databaseService
                   .insertWord(Word(
                       id: currentCount + 1,
@@ -225,7 +253,6 @@ class _HomePageState extends State<HomePage> {
                 (result) {
                   if (result) {
                     Navigator.of(context).pop();
-
                     setState(() {
                       _wordList = _databaseService.selectWords();
                     });
@@ -285,6 +312,13 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
+                      // 입력값 체크
+                      if (_nameController.text.isEmpty ||
+                          _meaningController.text.isEmpty) {
+                        _showWarningDialog('모든 필드를 입력해주세요.');
+                        return;
+                      }
+
                       _databaseService
                           .updateWord(Word(
                               id: snapshot.data!.id,

@@ -35,7 +35,6 @@ class DatabaseService {
 
   Future<bool> insertWord(Word word) async {
     final Database db = await database;
-
     try {
       db.insert(
         'words',
