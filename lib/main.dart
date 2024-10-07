@@ -238,9 +238,19 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () {
               // 입력값 체크
-              if (_nameController.text.isEmpty ||
+              String message = '';
+
+              if (_nameController.text.isEmpty &&
                   _meaningController.text.isEmpty) {
-                _showWarningDialog('모든 필드를 입력해주세요.');
+                message = '단어와 뜻을 모두 입력해주세요.';
+              } else if (_nameController.text.isEmpty) {
+                message = '단어를 입력해주세요.';
+              } else if (_meaningController.text.isEmpty) {
+                message = '뜻을 입력해주세요.';
+              }
+
+              if (message.isNotEmpty) {
+                _showWarningDialog(message);
                 return;
               }
 
@@ -313,9 +323,19 @@ class _HomePageState extends State<HomePage> {
                   ElevatedButton(
                     onPressed: () {
                       // 입력값 체크
-                      if (_nameController.text.isEmpty ||
+                      String message = '';
+
+                      if (_nameController.text.isEmpty &&
                           _meaningController.text.isEmpty) {
-                        _showWarningDialog('모든 필드를 입력해주세요.');
+                        message = '단어와 뜻을 모두 입력해주세요.';
+                      } else if (_nameController.text.isEmpty) {
+                        message = '단어를 입력해주세요.';
+                      } else if (_meaningController.text.isEmpty) {
+                        message = '뜻을 입력해주세요.';
+                      }
+
+                      if (message.isNotEmpty) {
+                        _showWarningDialog(message);
                         return;
                       }
 
