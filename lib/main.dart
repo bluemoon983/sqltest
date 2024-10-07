@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
               if (currentCount == 0) {
                 return const Center(
-                  child: Text("No data exists."),
+                  child: Text("단어를 입력해 보세요!"),
                 );
               } else {
                 return ListView.builder(
@@ -290,7 +290,12 @@ class _HomePageState extends State<HomePage> {
 
   Widget deleteWordDialog(int id) {
     return AlertDialog(
-      title: const Text("이 단어를 삭제하시겠습니까?"),
+      title: const Text(
+        "이 단어를 삭제하시겠습니까?",
+        style: TextStyle(
+          fontSize: 20,
+        ),
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
